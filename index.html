@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="1.ico">
+    <title>黑牛牌导航网站</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .main-content {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .search-container {
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 85px;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 150px;
+            padding: 10px 20px;
+            margin: 5px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .error-message {
+            color: red;
+            margin-top: -30px; /* 调整为30px以适应输入框下方-30px的需求 */
+            display: none;
+            width: 430px;
+            text-align: center;
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 5px 0;
+            border-radius: 4px;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .search-group {
+            display: flex;
+            gap: 10px;
+        }
+        .quick-links {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            margin-top: 20px; /* 添加间距 */
+        }
+        .quick-links a {
+            margin: 10px 0; /* 为链接添加间距 */
+        }
+        .tb {
+            width: 50px;
+            height: 50px;
+        }
+        .a3 {
+            color: #000000;
+        }
+        .b1 {
+            color: #f0f0f0;
+        }
+        .a{
+            color: #8bdaff;
+        }
+        .a2{
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <a href="index.html"><img src="icon.jpg" alt="网站logo" class="tb"></a>
+        <h1>黑牛牌导航网站</h1>
+
+        <!-- 搜索区块 -->
+        <div class="search-container">
+            <div class="search-group">
+                <input type="text" id="baiduSearchInput" placeholder="百度搜索内容" 
+                      onkeydown="handleEnter(event, 'baidu')">
+                <button onclick="searchBaidu()">百度搜索</button>
+            </div>
+            <div id="baiduErrorMessage" class="error-message">请键入搜索内容</div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-group">
+                <input type="text" id="bilibiliSearchInput" placeholder="B站搜索内容" 
+                      onkeydown="handleEnter(event, 'bilibili')">
+                <button onclick="searchBilibili()">B站搜索</button>
+            </div>
+            <div id="bilibiliErrorMessage" class="error-message">请键入搜索内容</div>
+        </div>
+
+        <div class="search-container">
+            <div class="search-group">
+                <input type="text" id="AISearchInput" placeholder="AI搜索内容" 
+                      onkeydown="handleEnter(event, 'AI')">
+                <button onclick="searchAI()">AI搜索</button>
+            </div>
+            <div id="AIErrorMessage" class="error-message">请键入搜索内容</div>
+        </div>
+
+        <!-- 快捷导航 -->
+        <div class="quick-links">
+            <h3 class="a2">快捷导航</h3>
+            <a href="https://dash.cloudflare.com/" target="_blank" class="a">Cloudflare控制台</a><br><br><br><br><br><br>
+            <a href="https://ys.mihoyo.com/cloud/" target="_blank" class="b1">云原神</a><br><br><br><br><br><br>
+            <a href="jc.html" class="a3">使用教程</a>
+        </div>
+    </div>
+    <script>
+        // 通用搜索函数
+        function search(query, engine) {
+            const inputElement = document.getElementById(engine + 'SearchInput');
+            const errorElement = document.getElementById(engine + 'ErrorMessage');
+            
+            if (!query.trim()) {
+                errorElement.style.display = 'block';
+                inputElement.focus();
+                // 设置错误信息在5秒后隐藏
+                setTimeout(() => {
+                    errorElement.style.display = 'none';
+                }, 5000);
+                return false;
+            }
+            
+            errorElement.style.display = 'none';
+            let searchUrl;
+            
+            // 配置不同搜索引擎的URL格式
+            const engines = {
+                baidu: `https://www.baidu.com/s?wd=${encodeURIComponent(query)}`,
+                bilibili: `https://search.bilibili.com/all?keyword=${encodeURIComponent(query)}`,
+                AI: `https://metaso.cn/search/b8056066-4a46-44a6-8a5e-a515570107ad?s=uitab&referrer_s=uitab&question=${encodeURIComponent(query)}`
+            };
+        
+            window.open(engines[engine] || engines.baidu, '_blank');
+            // 成功搜索后清空输入框内容
+            inputElement.value = '';
+            return true;
+        }
+        
+        // 各引擎专用函数
+        function searchBaidu() {
+            const query = document.getElementById('baiduSearchInput').value;
+            search(query, 'baidu');
+        }
+        
+        function searchBilibili() {
+            const query = document.getElementById('bilibiliSearchInput').value;
+            search(query, 'bilibili');
+        }
+        
+        function searchAI() {
+            const query = document.getElementById('AISearchInput').value;
+            search(query, 'AI');
+        }
+        
+        // 回车事件处理
+        function handleEnter(event, engine) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const searchFunc = {
+                    'baidu': searchBaidu,
+                    'bilibili': searchBilibili,
+                    'AI': searchAI
+                }[engine];
+                searchFunc && searchFunc();
+            }
+        }
+    </script>
+</body>
+</html>
